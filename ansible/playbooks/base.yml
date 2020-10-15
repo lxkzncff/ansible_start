@@ -1,0 +1,21 @@
+hosts: all
+become: yes
+tasks:
+  - name: NTP install
+    apt: package=ntp,ntpdate state=present
+  - name: NTP started
+    service: name ntpd state=started enabled=yes
+
+hosts: web
+tasks:
+  - name: Installs apache web server
+    apt: pkg=apache2 state=installed update_cache=true
+
+hosts: balancers
+tasks:
+  - name: Installs nginx
+    apt: pkg=nginx state=installed update_cache=true
+
+handlers:
+  - name: restart apache
+    service: name=apache2 state=restarted
